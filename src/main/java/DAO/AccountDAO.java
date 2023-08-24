@@ -27,11 +27,19 @@ public class AccountDAO {
         Connection connection = ConnectionUtil.getConnection();
         try {
             String sql = "INSERT INTO account (username, password) VALUES (?,?);";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            PreparedStatement preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 
             preparedStatement.setString(1, account.getUsername());
             preparedStatement.setString(2, account.getPassword());
-            preparedStatement.executeUpdate();
+            int rowsAffected = preparedStatement.executeUpdate();
+            if (rowsAffected == 1) {
+                ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    int accountId = generatedKeys.getInt(1);
+                    account.setAccount_id(accountId);
+                    return account;
+                }
+            }
             return account;
         } catch(SQLException e) {
             e.printStackTrace();
@@ -41,11 +49,10 @@ public class AccountDAO {
     public Account login(Account account) {
         Connection connection = ConnectionUtil.getConnection();
         try {
-            String sql = "SELECT * FROM account WHERE username = ? and password = ?;";
+            String sql = "SELECT * FROM account WHERE username = (?) AND password = (?);";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, account.getUsername());
             preparedStatement.setString(2, account.getPassword());
-            preparedStatement.executeUpdate();
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
                 Account loginAccount = new Account(

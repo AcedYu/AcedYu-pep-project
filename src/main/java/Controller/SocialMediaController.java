@@ -53,6 +53,16 @@ public class SocialMediaController {
     private void registerHandler(Context ctx) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         Account account = mapper.readValue(ctx.body(), Account.class);
+        // check if username is not blank
+        if (account.getUsername() == "") {
+            ctx.status(400);
+            return;
+        }
+        // check if password follows guidelines
+        if (account.getPassword().length() < 4) {
+            ctx.status(400);
+            return;
+        }
         Account addedAccount = accountService.registerUser(account);
         if (addedAccount != null) {
             ctx.json(mapper.writeValueAsString(addedAccount));
@@ -105,8 +115,12 @@ public class SocialMediaController {
     private void getMessageByIdHandler(Context ctx) {
         String id_string = ctx.pathParam("message_id");
         int id_int = Integer.parseInt(id_string);
-
-        ctx.json(messageService.getMessageById(id_int));
+        Message message = messageService.getMessageById(id_int);
+        if (message != null) {
+            ctx.json(message);
+        } else {
+            ctx.status(200);
+        }
         
     }
     private void deleteMessageHandler(Context ctx) {
