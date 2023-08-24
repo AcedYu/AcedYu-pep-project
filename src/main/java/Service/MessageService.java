@@ -18,8 +18,15 @@ public class MessageService {
     public Message getMessageById(int id) {
         return messageDAO.getMessageById(id);
     }
-    public void deleteMessage(int id) {
-        messageDAO.deleteMessage(id);
+    public Message deleteMessage(int id) {
+        Message deleteMessage = messageDAO.getMessageById(id);
+        if (deleteMessage != null) {
+            boolean success = messageDAO.deleteMessage(id);
+            if (success) {
+                return deleteMessage;
+            }
+        }
+        return null;
     }
     public Message updateMessage(int id, String message) {
         messageDAO.updateMessage(id, message);

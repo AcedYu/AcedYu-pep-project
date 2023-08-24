@@ -13,4 +13,7 @@ public class AccountService {
     public Account login(Account account) {
         return accountDAO.login(account);
     }
+    public Account getAccountById(int id) {
+        return accountDAO.getAccountById(id);
+    }
 }
