@@ -12,7 +12,7 @@ public class MessageService {
     public List<Message> getAllMessages() {
         return messageDAO.getAllMessages();
     }
-    public Message creatMessage(Message message) {
+    public Message createMessage(Message message) {
         return messageDAO.createMessage(message);
     }
     public Message getMessageById(int id) {

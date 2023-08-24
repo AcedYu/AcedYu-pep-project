@@ -37,7 +37,7 @@ public class SocialMediaController {
         app.get("/messages", this::getAllMessagesHandler);
         app.get("/messages/{message_id}", this::getMessageByIdHandler);
         app.delete("/messages/{message_id}", this::deleteMessageHandler);
-        app.put("/messages/{message_id}", this::patchMessageHandler);
+        app.patch("/messages/{message_id}", this::patchMessageHandler);
         app.get("/accounts/{account_id}/messages", this::getAccountMessagesHandler);
 
         return app;
@@ -99,7 +99,7 @@ public class SocialMediaController {
             return;
         }
 
-        Message addedMessage = messageService.creatMessage(message);
+        Message addedMessage = messageService.createMessage(message);
         if (addedMessage != null) {
             ctx.json(mapper.writeValueAsString(addedMessage));
             
@@ -139,6 +139,12 @@ public class SocialMediaController {
         String message_text = message.getMessage_text();
         String id_string = ctx.pathParam("message_id");
         int id_int = Integer.parseInt(id_string);
+
+        if (message_text.length() == 0 || message_text.length() > 254) {
+            ctx.status(400);
+            return;
+        }
+
         Message updatedMessage = messageService.updateMessage(id_int, message_text);
         System.out.println(updatedMessage);
         if (updatedMessage!= null) {
