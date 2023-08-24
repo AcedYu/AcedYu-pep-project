@@ -21,8 +21,9 @@ public class MessageService {
     public void deleteMessage(int id) {
         messageDAO.deleteMessage(id);
     }
-    public void updateMessage(int id, String message) {
+    public Message updateMessage(int id, String message) {
         messageDAO.updateMessage(id, message);
+        return messageDAO.getMessageById(id);
     }
     public List<Message> getUserMessages(int userid) {
         return messageDAO.getUserMessages(userid);

@@ -10,7 +10,7 @@ public class AccountService {
     public Account registerUser(Account account) {
         return accountDAO.registerUser(account);
     }
-    public Account login(String username, String password) {
-        return accountDAO.login(username, password);
+    public Account login(Account account) {
+        return accountDAO.login(account);
     }
 }
